@@ -3,7 +3,7 @@ title: "Exercise 2"
 author: ""
 date: "`r Sys.Date()`"
 output:
-  pdf_document: default
+  md_document
  
 ---
 <!--   pdf_document: default
@@ -67,9 +67,11 @@ https://r-data.pmagunia.com/dataset/r-dataset-package-mosaicdata-saratogahouses
 ### Model
 We used the following steps to make the precious model.
 
-- 1. Change qualitative variables into dummy variables in the data
-- 2. Split data train/test dataset 
----- we repeated the followign procedures ten times and take an average of rmse
+- 1 Change qualitative variables into dummy variables in the data
+- 2 Split data train/test dataset 
+
+<Repeat start>
+we repeated the followign procedures ten times and take an average of rmse
 
 The estimation of the model is
 $$
@@ -79,10 +81,11 @@ $$
 * In the knn regression, all variables is scaled for the standardization
 * In the regression, sometimes the low ranked estimation happens because of the multicolinearlity.
 
-- 3. Linear regression with all variables(*)
-- 4. Knn regression with all variables
----- (up to this)
-- 5. Compared the average of rmse of Linear and Knn model to find better fit model
+- 3 Linear regression with all variables(*)
+- 4 Knn regression with all variables
+<up to this>
+
+- 5 Compared the average of rmse of Linear and Knn model to find better fit model
 - 6. Summarized the better model and interpreted its meaning
 
 (*) In the character of the linear model, when we used all variables to estimate, the rmse is lower than when we didn't use them. 
@@ -222,8 +225,6 @@ Multiple R-squared:  0.6109,	Adjusted R-squared:  0.6058
 F-statistic: 118.9 on 18 and 1363 DF,  p-value: < 2.2e-16
 
 ```
-
-### 2. Reference
 
 
 

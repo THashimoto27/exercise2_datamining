@@ -40,10 +40,11 @@ Documentation of the Saratago House dataset
 
 We used the following steps to make the precious model.
 
--   1.  Change qualitative variables into dummy variables in the data
+-   1 Change qualitative variables into dummy variables in the data
+-   2 Split data train/test dataset
 
--   1.  Split data train/test dataset —- we repeated the followign
-        procedures ten times and take an average of rmse
+<Repeat start> we repeated the followign procedures ten times and take
+an average of rmse
 
 The estimation of the model is
 *l**o**g*(*P**r**i**c**e*) = *β*<sub>0</sub> + β\[*A**l**l* *v**a**r**i**a**b**l**e**s* *i**n* *t**h**e* *a**b**o**v**e*\]
@@ -52,12 +53,12 @@ the knn regression, all variables is scaled for the standardization \*
 In the regression, sometimes the low ranked estimation happens because
 of the multicolinearlity.
 
--   1.  Linear regression with all variables(\*)
+-   3 Linear regression with all variables(\*)
 
--   1.  Knn regression with all variables —- (up to this)
+-   4 Knn regression with all variables <up to this>
 
--   1.  Compared the average of rmse of Linear and Knn model to find
-        better fit model
+-   5 Compared the average of rmse of Linear and Knn model to find
+    better fit model
 
 -   1.  Summarized the better model and interpreted its meaning
 
@@ -125,5 +126,3 @@ one, then the less price house get.
     Residual standard error: 0.2815 on 1363 degrees of freedom
     Multiple R-squared:  0.6109,    Adjusted R-squared:  0.6058 
     F-statistic: 118.9 on 18 and 1363 DF,  p-value: < 2.2e-16
-
-### 2. Reference
