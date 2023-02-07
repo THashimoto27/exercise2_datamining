@@ -224,7 +224,10 @@ Residual standard error: 0.2815 on 1363 degrees of freedom
 Multiple R-squared:  0.6109,	Adjusted R-squared:  0.6058 
 F-statistic: 118.9 on 18 and 1363 DF,  p-value: < 2.2e-16
 
+
 ```
+
+\newpage
 
 # 2. Classification and retrospective sampling
 
@@ -289,5 +292,34 @@ We don't think so. Because the out-of-sample accuracy rate is 0.725 while the nu
 ### Would you recommend any changes to the bank's sampling scheme?
 
 As we said above, the data should be collected randomly that will make biased decrease.
+
+\newpage
+
+# 3. Children and hotel reservations
+
+```{r , include=FALSE}
+hotels_dev <- read.csv('hotels_dev.csv')
+hotels_val <- read.csv('hotels_val.csv')
+
+hotels_dev_split = initial_split(hotels_dev, prop = 0.8)
+hotels_dev_train = training(hotels_dev_split)
+hotels_dev_test = testing(hotels_dev_split)
+
+# Models
+baseline1 <- glm(children~market_segment+adults+customer_type+is_repeated_guest,data=hotels_dev_train, family=binomial)
+baseline2 <- glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
+model_dev <- glm(children~.,data=hotels_dev_train, family=binomial)
+
+# predict and rmse
+predict1 <- predict(baseline1, newdata=hotels_dev_test, type='response')
+predict2 <- predict(baseline2, newdata=hotels_dev_test, type='response')
+predict3 <- predict(model_dev, newdata=hotels_dev_test, type='response')
+
+# rmse
+rmse1 <- rmse(baseline1,hotels_dev_test )
+rmse2 <- rmse(baseline2,hotels_dev_test )
+rmse3 <- rmse(model_dev,hotels_dev_test )
+
+```
 
 
