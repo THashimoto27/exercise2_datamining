@@ -126,3 +126,55 @@ one, then the less price house get.
     Residual standard error: 0.2815 on 1363 degrees of freedom
     Multiple R-squared:  0.6109,    Adjusted R-squared:  0.6058 
     F-statistic: 118.9 on 18 and 1363 DF,  p-value: < 2.2e-16
+
+# 2. Classification and retrospective sampling
+
+## Results
+
+    The coefficients of the logit model
+            (Intercept)            duration              amount         installment                 age         historypoor 
+                  -0.66                0.02                0.00                0.19               -0.02               -1.30 
+        historyterrible          purposeedu purposegoods/repair       purposenewcar      purposeusedcar       foreigngerman 
+                  -2.02                0.91                0.13                0.94               -0.67               -1.55 
+
+    confusion matrix
+       yhat
+    y     0   1
+      0 131  11
+      1  44  14
+
+    out-of-sample accuracy rate
+    0.725
+
+    the result of the null model
+      0   1 
+    142  58 
+
+    the null model accuracy rate
+    0.71
+
+## Disucussion
+
+### What do you notice about the history variable vis-a-vis predicting defaults?
+
+From the coefficient of the logit model, the poor and terrible of the
+history made the probability of default decrease.
+
+### What do you think is going on here?
+
+Intuitively, the poor and terrible of the history made the probability
+of default increase. So there is something with the bad estimation. We
+can think this reason is caused by what the default is rare, and so we
+cannot collect data randomly(the data is not collected through random
+sampling) that is biased.
+
+### Do you think this data set is appropriate for building a predictive model of defaults
+
+We don’t think so. Because the out-of-sample accuracy rate is 0.725
+while the null model accuracy rate is 0.71. Therefore, the improvement
+of the estimation is so low.
+
+### Would you recommend any changes to the bank’s sampling scheme?
+
+As we said above, the data should be collected randomly that will make
+biased decrease.

@@ -229,7 +229,7 @@ F-statistic: 118.9 on 18 and 1363 DF,  p-value: < 2.2e-16
 # 2. Classification and retrospective sampling
 
 ## Results
-```{r setup, include=FALSE}
+```{r , include=FALSE}
 german_credit <- read.csv('german_credit.csv')
 gc_split = initial_split(german_credit, prop = 0.8)
 gc_train = training(gc_split)
