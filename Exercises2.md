@@ -59,7 +59,7 @@ $$
 -   5 Compared the average of rmse of Linear and Knn model to find
     better fit model
 
--   1.  Summarized the better model and interpreted its meaning
+-   6 Summarized the better model and interpreted its meaning
 
 ### Results
 
