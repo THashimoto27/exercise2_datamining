@@ -3,7 +3,7 @@ title: "Exercise 2"
 author: ""
 date: "`r Sys.Date()`"
 output:
-  md_document
+  pdf_document: default
  
 ---
 <!--   pdf_document: default
@@ -32,6 +32,7 @@ library(foreach)
 library(rsample)
 library(lubridate)
 library(olsrr)
+load("data.RData")
 ```
 
 
@@ -347,7 +348,6 @@ As we said above, the data should be collected randomly that will make biased de
 
 ```{r , eval=FALSE,include=FALSE}
 hotels_dev <- read.csv('hotels_dev.csv')
-hotels_val <- read.csv('hotels_val.csv')
 
 hotels_dev_split = initial_split(hotels_dev, prop = 0.8)
 hotels_dev_train= training(hotels_dev_split)
@@ -357,26 +357,157 @@ hotels_dev_test = testing(hotels_dev_split)
 baseline1 <- glm(children~market_segment+adults+customer_type+is_repeated_guest,data=hotels_dev_train, family=binomial)
 baseline2 <- glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
 
+model <- glm(children~.-arrival_date+year(arrival_date)+month(arrival_date)+average_daily_rate:adults+days_in_waiting_list:adults+ stays_in_weekend_nights :adults+total_of_special_requests:adults+booking_changes:average_daily_rate+booking_changes:days_in_waiting_list+lead_time:booking_changes+lead_time^2,data=hotels_dev_train)
 
-glmstep_b1 <- step(baseline1, scope=~(.)^2)
+## (*)Other glms
+## if add arrival year/month/date to the base line 2, the correction of the prediction is larger than that of the baseline 2
+## And, I add three polynominal parameters()
+## Caluculation of the variation "apply(hotels_dev_train, 2, sd)"
+     #                     hotel                      lead_time        stays_in_weekend_nights           stays_in_weekend_nights  
+     #                        NA                     91.1969864                      0.9870792                      1.9086186 
+     #                    adults                       children                           meal                 market_segment 
+     #                 0.5086470                      0.2743685                             NA                             NA 
+     #      distribution_channel              is_repeated_guest         previous_cancellations previous_bookings_not_canceled 
+     #                        NA                      0.2036092                      0.2917516                      1.7965860 
+     #        reserved_room_type             assigned_room_type                booking_changes                   deposit_type 
+     #                        NA                             NA                      0.7316105                             NA 
+     #      days_in_waiting_list                  customer_type             average_daily_rate    required_car_parking_spaces 
+     #                14.7206015                             NA                     48.7072715                             NA 
+     # total_of_special_requests                   arrival_date 
+     #                 0.8352343                             NA 
 
-glm0 = glm(children ~ 1, data=hotels_dev_train, family=binomial)
-glm_forward = step(glm0, direction='forward',
-	scope=~(market_segment+adults+customer_type+is_repeated_guest)^2)
 
-model_dev <- glm(children~.-arrival_date,data=hotels_dev_train_newmodel, family=binomial)
+## (**)Others attempts--- But the correction of the prediction is lower than that of the baseline 2
+## glmstep_b1 <- step(baseline1, scope=~(.)^2)
+## 
+## glm0 = glm(children ~ 1, data=hotels_dev_train, family=binomial)
+## glm_forward = step(glm0, direction='forward',
+## scope=~(market_segment+adults+customer_type+is_repeated_guest)^2)
+##
+##lm0 = lm(children ~ 1, data=hotels_dev_train)
+##lm_forward0 = step(lm0, direction='forward',
+##scope=~(market_segment+adults+customer_type+is_repeated_guest)^2)
+
 
 # predict and rmse
 predict1 <- predict(baseline1, newdata=hotels_dev_test, type='response')
 predict2 <- predict(baseline2, newdata=hotels_dev_test, type='response')
-predict3 <- predict(model_dev, newdata=hotels_dev_test_newmodel, type='response')
+predict3 <- predict(model, newdata=hotels_dev_test, type='response')
+##predict4 <- predict(glm_forward, newdata=hotels_dev_test, type='response')
+##predict5 <- predict(lm_forward, newdata=hotels_dev_test, type='response')
+##predict6 <- predict(glmstep_b1, newdata=hotels_dev_test, type='response')
 
-# rmse
-rmse1 <- rmse(baseline1,hotels_dev_test)
-rmse2 <- rmse(baseline2,hotels_dev_test)
-rmse3_1 <- rmse(glmstep_b1,hotels_dev_test)
-rmse3_2 <- rmse(glm_forward,hotels_dev_test)
 
+# predict
+yhat_test1 = ifelse(predict1 > 0.5, 1, 0)
+yhat_test2 = ifelse(predict2 > 0.5, 1, 0)
+yhat_test3 = ifelse(predict3 > 0.5, 1, 0)
+##yhat_test4 = ifelse(predict4 > 0.5, 1, 0)
+##yhat_test5 = ifelse(predict5 > 0.5, 1, 0)
+##yhat_test6 = ifelse(predict6 > 0.5, 1, 0)
+
+confusion_out1= table(y = hotels_dev_test$children, yhat = yhat_test1)
+confusion_out2= table(y = hotels_dev_test$children, yhat = yhat_test2)
+confusion_out3= table(y = hotels_dev_test$children, yhat = yhat_test3)
+##confusion_out4= table(y = hotels_dev_test$children, yhat = yhat_test4)
+##confusion_out5= table(y = hotels_dev_test$children, yhat = yhat_test5)
+##confusion_out6= table(y = hotels_dev_test$children, yhat = yhat_test6)
+
+result1 = sum(diag(confusion_out1))/sum(confusion_out1)
+result2 = sum(diag(confusion_out2))/sum(confusion_out2)
+result3 = sum(diag(confusion_out3))/sum(confusion_out3)
+##result4 = sum(diag(confusion_out4))/sum(confusion_out4)
+##result5 = sum(diag(confusion_out5))/sum(confusion_out5)
+##result6 = sum(diag(confusion_out6))/sum(confusion_out6)
+```
+
+```{r , eval=FALSE,include=FALSE}
+# Model Valuation: Step1
+hotels_val <- read.csv('hotels_val.csv')
+
+hotels_val_split = initial_split(hotels_val, prop = 0.8)
+hotels_val_train= training(hotels_val_split)
+hotels_val_test = testing(hotels_val_split)
+
+baseline1 <- glm(children~market_segment+adults+customer_type+is_repeated_guest,data=hotels_val_train, family=binomial)
+baseline2 <- glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
+
+## I COULD NOT UNDERSTAND: glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
+## The simple and same regression does not work =glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
+model_val <- glm(children~hotel+lead_time+stays_in_weekend_nights+stays_in_week_nights+adults+children+meal+market_segment+distribution_channel+is_repeated_guest+previous_cancellations+previous_bookings_not_canceled+reserved_room_type+assigned_room_type+booking_changes+deposit_type+days_in_waiting_list+customer_type+average_daily_rate+required_car_parking_spaces+total_of_special_requests+year(arrival_date)+month(arrival_date)+average_daily_rate:adults+days_in_waiting_list:adults+ stays_in_weekend_nights :adults+total_of_special_requests:adults+booking_changes:average_daily_rate+booking_changes:days_in_waiting_list+lead_time:booking_changes+lead_time^2,data=hotels_val_train, family=binomial)
+
+predict_baselin1_val <- predict(baseline1, newdata=hotels_val_test, type='response')
+predict_baselin2_val <- predict(baseline2, newdata=hotels_val_test, type='response')
+predict_model_val <- predict(model_val, newdata=hotels_val_test, type='response')
+
+
+## IF t=0.5
+## yhat_test_val = ifelse(predict_val > 0.5, 1, 0)
+## confusion_out_val= table(y = hotels_val_test$children, yhat = yhat_test_val)
+## tpr = confusion_out_val[2,2]/sum(confusion_out_val[2,])
+## fpr = confusion_out_val[1,2]/sum(confusion_out_val[1,])
+
+## IF t= 0.05-0.95
+## Since I could get some errors if t= 0-1, I set up like above but it looks like that does not matter with the overall results.
+result_step1 <- foreach(t= seq(0.1,0.9,0.01), .combine=rbind) %do%{
+  #yhat_base1_val = ifelse(predict_baselin1_val > t, 1, 0)
+  yhat_base2_val = ifelse(predict_baselin2_val > t, 1, 0)  
+  yhat_model_val = ifelse(predict_model_val > t, 1, 0)
+  
+  #confusion_base1_val= table(y = hotels_val_test$children, yhat = yhat_base1_val)
+  confusion_base2_val= table(y = hotels_val_test$children, yhat = yhat_base2_val)
+  confusion_model_val= table(y = hotels_val_test$children, yhat = yhat_model_val)
+  
+  result1 = sum(diag(confusion_base1_val))/sum(confusion_base1_val)
+  
+  #tpr_base1 = confusion_base1_val[2,2]/sum(confusion_model_val[2,])
+  #fpr_base1 = confusion_base1_val[1,2]/sum(confusion_base1_val[1,])
+  tpr_base2 = confusion_base2_val[2,2]/sum(confusion_base2_val[2,])
+  fpr_base2 = confusion_base2_val[1,2]/sum(confusion_base2_val[1,])
+  tpr_model = confusion_model_val[2,2]/sum(confusion_model_val[2,])
+  fpr_model = confusion_model_val[1,2]/sum(confusion_model_val[1,])
+  c(t=t,tpr_base2=tpr_base2,fpr_base2=fpr_base2,tpr_model=tpr_model,fpr_model=fpr_model)
+} %>% as.data.frame
+
+## Plot ROC curve
+ggplot(data =result_step1)+ geom_line(aes(x=fpr_base2, y=tpr_base2),colour="red")+ geom_line(aes(x=fpr_model, y=tpr_model),color="blue")
+ggsave("./graph/result_step1.png")
+```
+
+```{r, echo=FALSE,out.width ="70%", out.height = "70%",fig.align='center'}
+# Show the above result as a table
+knitr::include_graphics("./graph/result_step1.png")
 ```
 
 
+```{r , eval=FALSE,include=FALSE}
+# Create Folds
+hotels_val2 = crossv_kfold(hotels_val, k=20)
+
+result_step2 = foreach(i = 1:20, .combine='rbind') %do% {
+  # Model
+  base_val2 <- glm(children~.-arrival_date,data=hotels_val2$train[[i]], family=binomial)
+  model_val2 <- glm(children~.-arrival_date+year(arrival_date)+month(arrival_date)+average_daily_rate:adults+days_in_waiting_list:adults+ stays_in_weekend_nights :adults+total_of_special_requests:adults+booking_changes:average_daily_rate+booking_changes:days_in_waiting_list+lead_time:booking_changes+lead_time^2,data=hotels_val2$train[[i]], family=binomial)
+  #Predict
+  predict_base2 <- predict(base_val2 , newdata=hotels_val2$test[[i]], type='response')
+  predict_val <- predict(model_val, newdata=hotels_val2$test[[i]], type='response')
+  
+  yhat_base2_val = ifelse(predict_base2 > 0.5, 1, 0)
+  yhat_model_val = ifelse(predict_val > 0.5, 1, 0)
+
+  confusion_base2_val= table(y = as.data.frame(hotels_val2$test[[i]])$children, yhat = yhat_base2_val)
+  confusion_model_val= table(y = as.data.frame(hotels_val2$test[[i]])$children, yhat = yhat_model_val)
+  # Estimation and Actual
+  c(predict_base2 =sum(confusion_base_val[,2]) , predict_model =  sum(confusion_model_val[,2]),actual=sum(confusion_model_val[2,]))
+ } %>% as.data.frame
+rownames(result_step2) <- c(1:20)
+
+# Show the result on the Console
+sum(result_step2$predict)
+sum(result_step2$actual)
+```
+
+```{r, echo=FALSE,out.width ="70%", out.height = "70%",fig.align='center'}
+# Show the above result as a table
+knitr::kable(result_step2)
+```
