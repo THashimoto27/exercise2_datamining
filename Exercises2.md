@@ -170,7 +170,7 @@ decrease at the statistically siginificance.
 ## Results
 
 The graph of the default probability by credit history is
-<img src="./graph/default_history.png" width="70%" height="70%" style="display: block; margin: auto;" />
+<img src="./graph/default_history.png" width="50%" height="50%" style="display: block; margin: auto;" />
 
 The result of the logit model that we built is
 
@@ -210,6 +210,10 @@ of default increase. So there is something with the bad estimation. We
 can think this reason is caused by what the default is rare, and so we
 cannot collect data randomly(the data is not collected through random
 sampling) that is biased.
+
+As this evidence, the bar graph has shows that people of the good credit
+history has the higher default probability. However, this is different
+from the intuitive result and is not reality.
 
 ### Do you think this data set is appropriate for building a predictive model of defaults
 

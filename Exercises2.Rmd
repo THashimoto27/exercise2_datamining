@@ -305,7 +305,7 @@ confusion_out_logit = table(y = gc_test$Default, yhat = yhat_test_logit_gc)
 ```
 
 The graph of the default probability by credit history is
-```{r, echo=FALSE,out.width ="70%", out.height = "70%",fig.align='center'}
+```{r, echo=FALSE,out.width ="50%", out.height = "50%",fig.align='center'}
 # Show the above result as a table
 knitr::include_graphics("./graph/default_history.png")
 ```
@@ -344,7 +344,9 @@ From the coefficient of the logit model, the poor and terrible of the history ma
 
 ### What do you think is going on here?
 
-Intuitively, the poor and terrible of the history made the probability of default increase. So there is something with the bad estimation. We can think this reason is caused by what the default is rare, and so we cannot collect data randomly(the data is not collected through random sampling) that is biased.
+Intuitively, the poor and terrible of the history made the probability of default increase. So there is something with the bad estimation. We can think this reason is caused by what the default is rare, and so we cannot collect data randomly(the data is not collected through random sampling) that is biased. 
+
+As this evidence, the bar graph has shows that people of the good credit history has the higher default probability. However, this is different from the intuitive result and is not reality.
 
 ### Do you think this data set is appropriate for building a predictive model of defaults
 
