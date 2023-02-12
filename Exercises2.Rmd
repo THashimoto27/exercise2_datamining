@@ -3,7 +3,7 @@ title: "Exercise 2"
 author: ""
 date: "`r Sys.Date()`"
 output:
-  pdf_document: default
+  md_document
  
 ---
 <!--   pdf_document: default
@@ -35,8 +35,7 @@ library(olsrr)
 load("data.RData")
 ```
 
-
-#1) Saratoga house prices
+# 1) Saratoga house prices
 
 ## Pricing Strategy
 
@@ -278,7 +277,7 @@ F-statistic: 38.02 on 63 and 1318 DF,  p-value: < 2.2e-16
 
 \newpage
 
-# 2. Classification and retrospective sampling
+# 2) Classification and retrospective sampling
 
 ## Results
 ```{r ,  eval=FALSE,include=FALSE}
@@ -344,8 +343,9 @@ As we said above, the data should be collected randomly that will make biased de
 
 \newpage
 
-# 3. Children and hotel reservations
+# 3) Children and hotel reservations
 
+## Model Building
 ```{r , eval=FALSE,include=FALSE}
 hotels_dev <- read.csv('hotels_dev.csv')
 
@@ -419,7 +419,51 @@ result3 = sum(diag(confusion_out3))/sum(confusion_out3)
 ##result4 = sum(diag(confusion_out4))/sum(confusion_out4)
 ##result5 = sum(diag(confusion_out5))/sum(confusion_out5)
 ##result6 = sum(diag(confusion_out6))/sum(confusion_out6)
+
+save.image("data.RData")
 ```
+
+### Models
+
+We shows the models that we used in this problems. First, the baseline 1 is
+$$
+\begin{aligned}
+children = \beta_0+\boldsymbol \beta \mathbf{X}_{market\ segment,  \ adults,\ customer_type,\ is\ repeated\ guest}
+\end{aligned}
+$$
+
+The baseline 2 is
+$$
+\begin{aligned}
+children = \beta_0+\boldsymbol \beta \mathbf{X}_{all\ variables\ excpet\ arriving\ date}
+\end{aligned}
+$$
+
+The our model is
+$$
+\begin{aligned}
+children &= \beta_0+\boldsymbol \beta \mathbf{X}_{all\ variables\ excpet\ arriving\ date}+arriving\ year+ arriving\ month \\
+& \quad +average\ daily\ rate\times adults \\
+& \quad +\ days\ in\ waiting_list\times adults\\
+&\quad + stays\ in\ weekend_nights\times adults\\
+&\quad +total\ of\ special\ requests\times adults \\
+&\quad +booking\ changes\times average\ daily\ rate\\
+&\quad +booking\ changes\times days\ in\ waiting_list \\
+&\quad +lead\ time \times booking\ changes \\
+&\quad +(lead\ time)^2
+\end{aligned}
+$$
+
+### Check
+
+Out-of-sample accuracy rate by each model is
+```{r, echo=FALSE}
+knitr::kable(cbind(baseline1=result1,baseline2= result2,mymodel=result3))
+```
+
+Therefore, the model accuracy of my model is higher than the baseline2 by 0.1% and thn the baseline 1 by 1.7%. 
+
+## Model validation: step 1
 
 ```{r , eval=FALSE,include=FALSE}
 # Model Valuation: Step1
@@ -457,9 +501,7 @@ result_step1 <- foreach(t= seq(0.1,0.9,0.01), .combine=rbind) %do%{
   #confusion_base1_val= table(y = hotels_val_test$children, yhat = yhat_base1_val)
   confusion_base2_val= table(y = hotels_val_test$children, yhat = yhat_base2_val)
   confusion_model_val= table(y = hotels_val_test$children, yhat = yhat_model_val)
-  
-  result1 = sum(diag(confusion_base1_val))/sum(confusion_base1_val)
-  
+
   #tpr_base1 = confusion_base1_val[2,2]/sum(confusion_model_val[2,])
   #fpr_base1 = confusion_base1_val[1,2]/sum(confusion_base1_val[1,])
   tpr_base2 = confusion_base2_val[2,2]/sum(confusion_base2_val[2,])
@@ -474,11 +516,21 @@ ggplot(data =result_step1)+ geom_line(aes(x=fpr_base2, y=tpr_base2),colour="red"
 ggsave("./graph/result_step1.png")
 ```
 
+The ROC curve of baseline 2 and my model is
+
 ```{r, echo=FALSE,out.width ="70%", out.height = "70%",fig.align='center'}
 # Show the above result as a table
 knitr::include_graphics("./graph/result_step1.png")
 ```
 
+red line: baseline 2, blue line: my model
+
+From the graph, if FPR=0.05 my model has higher tpr than baseline 2, and so my model is better than baseline 2 in this case. 
+
+However, in the low FPR, the TPR of baseline 2 is higher than that of my model, and so my model is worse than baseline 2. Also, in the high FPR, the TPR of baseline 2 is lower than that of my model, and so my model is better than baseline 2.
+
+
+### Model validation: step 2
 
 ```{r , eval=FALSE,include=FALSE}
 # Create Folds
@@ -486,7 +538,7 @@ hotels_val2 = crossv_kfold(hotels_val, k=20)
 
 result_step2 = foreach(i = 1:20, .combine='rbind') %do% {
   # Model
-  base_val2 <- glm(children~.-arrival_date,data=hotels_val2$train[[i]], family=binomial)
+  base_val2 <- glm(children~hotel+lead_time+stays_in_weekend_nights+stays_in_week_nights+adults+children+meal+market_segment+distribution_channel+is_repeated_guest+previous_cancellations+previous_bookings_not_canceled+reserved_room_type+assigned_room_type+booking_changes+deposit_type+days_in_waiting_list+customer_type+average_daily_rate+required_car_parking_spaces+total_of_special_requests,data=hotels_val2$train[[i]], family=binomial)
   model_val2 <- glm(children~.-arrival_date+year(arrival_date)+month(arrival_date)+average_daily_rate:adults+days_in_waiting_list:adults+ stays_in_weekend_nights :adults+total_of_special_requests:adults+booking_changes:average_daily_rate+booking_changes:days_in_waiting_list+lead_time:booking_changes+lead_time^2,data=hotels_val2$train[[i]], family=binomial)
   #Predict
   predict_base2 <- predict(base_val2 , newdata=hotels_val2$test[[i]], type='response')
@@ -498,16 +550,22 @@ result_step2 = foreach(i = 1:20, .combine='rbind') %do% {
   confusion_base2_val= table(y = as.data.frame(hotels_val2$test[[i]])$children, yhat = yhat_base2_val)
   confusion_model_val= table(y = as.data.frame(hotels_val2$test[[i]])$children, yhat = yhat_model_val)
   # Estimation and Actual
-  c(predict_base2 =sum(confusion_base_val[,2]) , predict_model =  sum(confusion_model_val[,2]),actual=sum(confusion_model_val[2,]))
+  c(predict_base2 =sum(confusion_base2_val[,2]) , predict_model =  sum(confusion_model_val[,2]),actual=sum(confusion_model_val[2,]))
  } %>% as.data.frame
 rownames(result_step2) <- c(1:20)
 
 # Show the result on the Console
-sum(result_step2$predict)
+sum(result_step2$predict_base2)
+sum(result_step2$predict_model)
 sum(result_step2$actual)
+save.image("data.RData")
 ```
 
+In this case, we assumed a threshold is 50%, and our results is in the following. 
 ```{r, echo=FALSE,out.width ="70%", out.height = "70%",fig.align='center'}
 # Show the above result as a table
 knitr::kable(result_step2)
+knitr::kable(cbind(sum_base2=sum(result_step2$predict_base2), sum_predict=sum(result_step2$predict_model), sum_actual=sum(result_step2$actual)))
 ```
+
+From the result, the predicting the total number of bookings with children by baseline 2 is 207, that by my model is 221, and that by actual data is 402. The accurancy of the prediction of the our model is around 50%, which is so lower than we expected. However, our model's accurancy of the prediction is higher than the baseline 2's one.

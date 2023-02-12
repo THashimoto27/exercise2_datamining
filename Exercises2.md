@@ -1,7 +1,7 @@
 <!--   pdf_document: default
  md_document -->
 
-\#1) Saratoga house prices
+# 1) Saratoga house prices
 
 ## Pricing Strategy
 
@@ -165,7 +165,7 @@ decrease at the statistically siginificance.
     Multiple R-squared:  0.645, Adjusted R-squared:  0.6281 
     F-statistic: 38.02 on 63 and 1318 DF,  p-value: < 2.2e-16
 
-# 2. Classification and retrospective sampling
+# 2) Classification and retrospective sampling
 
 ## Results
 
@@ -217,4 +217,218 @@ of the estimation is so low.
 As we said above, the data should be collected randomly that will make
 biased decrease.
 
-# 3. Children and hotel reservations
+# 3) Children and hotel reservations
+
+## Model Building
+
+### Models
+
+We shows the models that we used in this problems. First, the baseline 1
+is
+$$
+\begin{aligned}
+children = \beta\_0+\boldsymbol \beta \mathbf{X}\_{market\\ segment,  \\ adults,\\ customer\_type,\\ is\\ repeated\\ guest}
+\end{aligned}
+$$
+
+The baseline 2 is
+$$
+\begin{aligned}
+children = \beta\_0+\boldsymbol \beta \mathbf{X}\_{all\\ variables\\ excpet\\ arriving\\ date}
+\end{aligned}
+$$
+
+The our model is
+$$
+\begin{aligned}
+children &= \beta\_0+\boldsymbol \beta \mathbf{X}\_{all\\ variables\\ excpet\\ arriving\\ date}+arriving\\ year+ arriving\\ month \\\\
+& \quad +average\\ daily\\ rate\times adults \\\\
+& \quad +\\ days\\ in\\ waiting\_list\times adults\\\\
+&\quad + stays\\ in\\ weekend\_nights\times adults\\\\
+&\quad +total\\ of\\ special\\ requests\times adults \\\\
+&\quad +booking\\ changes\times average\\ daily\\ rate\\\\
+&\quad +booking\\ changes\times days\\ in\\ waiting\_list \\\\
+&\quad +lead\\ time \times booking\\ changes \\\\
+&\quad +(lead\\ time)^2
+\end{aligned}
+$$
+
+### Check
+
+Out-of-sample accuracy rate by each model is
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">baseline1</th>
+<th style="text-align: right;">baseline2</th>
+<th style="text-align: right;">mymodel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.9202222</td>
+<td style="text-align: right;">0.9368889</td>
+<td style="text-align: right;">0.9375556</td>
+</tr>
+</tbody>
+</table>
+
+Therefore, the model accuracy of my model is higher than the baseline2
+by 0.1% and thn the baseline 1 by 1.7%.
+
+## Model validation: step 1
+
+The ROC curve of baseline 2 and my model is
+
+<img src="./graph/result_step1.png" width="70%" height="70%" style="display: block; margin: auto;" />
+
+red line: baseline 2, blue line: my model
+
+From the graph, if FPR=0.05 my model has higher tpr than baseline 2, and
+so my model is better than baseline 2 in this case.
+
+However, in the low FPR, the TPR of baseline 2 is higher than that of my
+model, and so my model is worse than baseline 2. Also, in the high FPR,
+the TPR of baseline 2 is lower than that of my model, and so my model is
+better than baseline 2.
+
+### Model validation: step 2
+
+In this case, we assumed a threshold is 50%, and our results is in the
+following.
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">predict_base2</th>
+<th style="text-align: right;">predict_model</th>
+<th style="text-align: right;">actual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">28</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">sum_base2</th>
+<th style="text-align: right;">sum_predict</th>
+<th style="text-align: right;">sum_actual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">207</td>
+<td style="text-align: right;">221</td>
+<td style="text-align: right;">402</td>
+</tr>
+</tbody>
+</table>
+
+From the result, the predicting the total number of bookings with
+children by baseline 2 is 207, that by my model is 221, and that by
+actual data is 402. The accurancy of the prediction of the our model is
+around 50%, which is so lower than we expected. However, our model’s
+accurancy of the prediction is higher than the baseline 2’s one.
