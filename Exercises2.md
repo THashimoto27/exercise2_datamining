@@ -169,6 +169,11 @@ decrease at the statistically siginificance.
 
 ## Results
 
+The graph of the default probability by credit history is
+<img src="./graph/default_history.png" width="70%" height="70%" style="display: block; margin: auto;" />
+
+The result of the logit model that we built is
+
     The coefficients of the logit model
             (Intercept)            duration              amount         installment                 age         historypoor 
                   -0.66                0.02                0.00                0.19               -0.02               -1.30 

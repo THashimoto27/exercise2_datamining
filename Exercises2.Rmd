@@ -282,6 +282,13 @@ F-statistic: 38.02 on 63 and 1318 DF,  p-value: < 2.2e-16
 ## Results
 ```{r ,  eval=FALSE,include=FALSE}
 german_credit <- read.csv('german_credit.csv')
+
+# Plot Default hisory
+data_credit <- german_credit %>% group_by(history) %>% summarize(sum = sum(Default), num=n(), prob = sum/num)
+ggplot(data =data_credit)+ geom_col(aes(x=history, y=prob))
+ggsave("./graph/default_history.png")
+
+
 gc_split = initial_split(german_credit, prop = 0.8)
 gc_train = training(gc_split)
 gc_test = testing(gc_split)
@@ -297,8 +304,14 @@ confusion_out_logit = table(y = gc_test$Default, yhat = yhat_test_logit_gc)
 #table(gc_test$Default)
 ```
 
+The graph of the default probability by credit history is
+```{r, echo=FALSE,out.width ="70%", out.height = "70%",fig.align='center'}
+# Show the above result as a table
+knitr::include_graphics("./graph/default_history.png")
+```
 
 
+The result of the logit model that we built is 
 ```
 The coefficients of the logit model
         (Intercept)            duration              amount         installment                 age         historypoor 
@@ -420,7 +433,11 @@ result3 = sum(diag(confusion_out3))/sum(confusion_out3)
 ##result5 = sum(diag(confusion_out5))/sum(confusion_out5)
 ##result6 = sum(diag(confusion_out6))/sum(confusion_out6)
 
-save.image("data.RData")
+rmse1=rmse(baseline1,hotels_dev_test) 
+rmse2=rmse(baseline2,hotels_dev_test) 
+rmse3=rmse(model,hotels_dev_test) 
+
+#save.image("data.RData")
 ```
 
 ### Models
@@ -478,7 +495,10 @@ baseline2 <- glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
 
 ## I COULD NOT UNDERSTAND: glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
 ## The simple and same regression does not work =glm(children~.-arrival_date,data=hotels_dev_train, family=binomial)
-model_val <- glm(children~hotel+lead_time+stays_in_weekend_nights+stays_in_week_nights+adults+children+meal+market_segment+distribution_channel+is_repeated_guest+previous_cancellations+previous_bookings_not_canceled+reserved_room_type+assigned_room_type+booking_changes+deposit_type+days_in_waiting_list+customer_type+average_daily_rate+required_car_parking_spaces+total_of_special_requests+year(arrival_date)+month(arrival_date)+average_daily_rate:adults+days_in_waiting_list:adults+ stays_in_weekend_nights :adults+total_of_special_requests:adults+booking_changes:average_daily_rate+booking_changes:days_in_waiting_list+lead_time:booking_changes+lead_time^2,data=hotels_val_train, family=binomial)
+
+#model_val <- glm(children~hotel+lead_time+stays_in_weekend_nights+stays_in_week_nights+adults+children+meal+market_segment+distribution_channel+is_repeated_guest+previous_cancellations+previous_bookings_not_canceled+reserved_room_type+assigned_room_type+booking_changes+deposit_type+days_in_waiting_list+customer_type+average_daily_rate+required_car_parking_spaces+total_of_special_requests+year(arrival_date)+month(arrival_date)+average_daily_rate:adults+days_in_waiting_list:adults+ stays_in_weekend_nights :adults+total_of_special_requests:adults+booking_changes:average_daily_rate+booking_changes:days_in_waiting_list+lead_time:booking_changes+lead_time^2,data=hotels_val_train, family=binomial)
+
+model <-glm(children~adults,data=hotels_val_train, family=binomial)
 
 predict_baselin1_val <- predict(baseline1, newdata=hotels_val_test, type='response')
 predict_baselin2_val <- predict(baseline2, newdata=hotels_val_test, type='response')
@@ -558,7 +578,7 @@ rownames(result_step2) <- c(1:20)
 sum(result_step2$predict_base2)
 sum(result_step2$predict_model)
 sum(result_step2$actual)
-save.image("data.RData")
+#save.image("data.RData")
 ```
 
 In this case, we assumed a threshold is 50%, and our results is in the following. 
