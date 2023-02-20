@@ -174,27 +174,25 @@ The graph of the default probability by credit history is
 
 The result of the logit model that we built is
 
-    The coefficients of the logit model
             (Intercept)            duration              amount         installment                 age         historypoor 
-                  -0.66                0.02                0.00                0.19               -0.02               -1.30 
+                  -0.71                0.03                0.00                0.22               -0.02               -1.11 
         historyterrible          purposeedu purposegoods/repair       purposenewcar      purposeusedcar       foreigngerman 
-                  -2.02                0.91                0.13                0.94               -0.67               -1.55 
+                  -1.88                0.72                0.10                0.85               -0.80               -1.26
 
-    confusion matrix
        yhat
     y     0   1
-      0 131  11
-      1  44  14
+      0 645  55
+      1 211  89
 
-    out-of-sample accuracy rate
-    0.725
+    accuracy rate
+    0.734
 
     the result of the null model
       0   1 
-    142  58 
+    700 300 
 
     the null model accuracy rate
-    0.71
+    0.70
 
 ## Disucussion
 
@@ -217,9 +215,9 @@ from the intuitive result and is not reality.
 
 ### Do you think this data set is appropriate for building a predictive model of defaults
 
-We don’t think so. Because the out-of-sample accuracy rate is 0.725
-while the null model accuracy rate is 0.71. Therefore, the improvement
-of the estimation is so low.
+We don’t think so. Because the out-of-sample accuracy rate is 0.734
+while the null model accuracy rate is 0.70. Therefore, the improvement
+of the estimation is so low(only 3.4 percentage point).
 
 ### Would you recommend any changes to the bank’s sampling scheme?
 
