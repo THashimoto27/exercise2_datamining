@@ -63,8 +63,13 @@ $$
 
 ### Results
 
-The liner model of RMSE is 0.2822 and The Knn model of RMSE is 0.3061.
-Please see the detail of the linear reagression in the appendix.
+The liner model of RMSE is 0.2822 and the Knn model of RMSE is 0.3061.
+Please see the detail of the linear regression in the appendix.
+
+Also, We tried to do the same regression on the way of K-CV, and then we
+got the rmse of the linear regression is 0.292 and that of the KNN
+regression is 0.299. This results looks like the same as the way of hte
+ten-times average.
 
 ### Discussion: Comparison between Linear and LNN model
 

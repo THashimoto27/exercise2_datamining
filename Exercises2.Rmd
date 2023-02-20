@@ -3,7 +3,7 @@ title: "Exercise 2"
 author: ""
 date: "`r Sys.Date()`"
 output:
-  md_document
+  pdf_document: default
  
 ---
 <!--   pdf_document: default
@@ -179,9 +179,16 @@ result = c(result_lm,result_knn)
 #summary(model1)
 ```
 
+The liner model of RMSE is 0.2822 and the Knn model of RMSE is 0.3061. Please see the detail of the linear regression in the appendix.
+
+
 ```{r , eval=FALSE,echo=FALSE,fig.width =5.5, fig.height = 2,fig.align='center'}
 # K-CV
-data_cv <- as.data.frame(c(SaratogaHouses[1],all_polym2(SaratogaHouses[2:10]),SaratogaHouses[11:16]))
+data <- SaratogaHouses[,2:10]
+scale_train = apply(data, 2, sd) # calculate std dev for each column
+data_tilde = scale(data , scale = scale_train) %>% as.data.frame
+
+data_cv <- as.data.frame(c(SaratogaHouses[1],all_polym2(data_tilde),SaratogaHouses[11:16]))
 
 K_folds = 5
 saratoga_folds = crossv_kfold(data_cv, k=K_folds)
@@ -190,10 +197,6 @@ saratoga_folds = crossv_kfold(data_cv, k=K_folds)
 model_lmcv = map(saratoga_folds$train, ~ lm(log(price)~ ., data=.))
 rmse_lmcv = mean(map2_dbl(model_lmcv, saratoga_folds$test, modelr::rmse))
 
-scale_train = map(saratoga_folds$train, ~apply(.,2, sd))# calculate std dev for each column
-Xtilde_train = scale(X_train, scale = scale_train) %>% as.data.frame
-Xtilde_test = scale(X_test, scale = scale_train) %>% as.data.frame # use the training set scales!
-
 # Knn
 model_knncv = foreach(k = 1:200, .combine='rbind') %do% {
   models1 = map(saratoga_folds$train, ~ knnreg(log(price)~ ., k=k, data = ., use.all=FALSE))
@@ -201,9 +204,13 @@ model_knncv = foreach(k = 1:200, .combine='rbind') %do% {
   c(k=k, err = mean(errs1), std_err = sd(errs1)/sqrt(K_folds))
 } %>% as.data.frame
 
+knn_min_rmse=model_knncv[model_knncv$err==min(model_knncv$err),]
+
 ```
 
-The liner model of RMSE is 0.2822 and The Knn model of RMSE is 0.3061. Please see the detail of the linear reagression in the appendix.
+Also, We tried to do the same regression on the way of K-CV, and then we got the rmse of the linear regression is 0.292 and that of the KNN regression is 0.299. This results looks like the same as the way of hte ten-times average.
+
+
 
 ### Discussion: Comparison between Linear and LNN model
 In this estimation, from the result that rmse of the linear model is smaller than that of knn model, the fitting of the linear model is better than that of the best linear model. We can think this reason is what the liner model that is set up  close to the true model.
