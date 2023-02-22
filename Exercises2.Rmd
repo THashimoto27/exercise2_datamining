@@ -1,6 +1,7 @@
 ---
 title: "Exercise 2"
-author: ""
+author: "Takehiro Hasimoto (UT EID - TH33985), Avijit Mallik (UT EID - AM99484), Arindam
+  Chatterjee (UT EID - AC83995)"
 date: "`r Sys.Date()`"
 output:
   md_document
@@ -228,7 +229,10 @@ result = c(result_lm1,result_lm2,result_lm3,result_lm4,result_lm5,result_lm6,res
 #summary(model1)
 ```
 
-Here linear model 1 (lm1) is the medium model as mentioned in the lecture slide, wherein professor has mentioned that the medium model is price versus all variables above (main effects only). Now using the combination of transformations and by adding the interactions, we have tried to handbuild a model for price that outperforms the medium model that has alreday been discussed in class. From the results obtained so far, we have found that the best model is the linear model 4 (lm4) as it has the lowest RMSE value of 58810.74. This lowest rmse value will vary for another train/ test split, on different run ("Horse Race", as mentioned in question). Here the lm4 model is obtained by interacting the 'bathrooms' variable with all other quantitative variables. The reason for interacting with 'bathrooms' is that bathroom coefficient is not only significant, but also it has the largest coefficient value as shown in the result below in almost all regressions. Here we may mention that in this run, we have found the rmse values of 65866.46, 59176.73, 58865.59, 60516.03, 61696.79, 60832.13 for linear models 1(r1), 2(r2), 3(r3), 4(r4), 5(r5),  KNN model and K-CV model respectively. Thus clearly lm4 model is found to be the best model with lowest rmse value.
+3 Linear regression with medium model,'lm1'(r1), some original setting(r2-r5) and all variables(r6)
+5 Compared the average of rmse in the linear model to find the best linear model, also compared it to KNN model to find better fit model
+
+Here linear model 1 (lm1) is the medium model as mentioned in the lecture slide, wherein professor has mentioned that the medium model is price versus all variables above (main effects only). Now using the combination of transformations and by adding the interactions, we have tried to handbuild a model for price that outperforms the medium model that has alreday been discussed in class. From the results obtained so far, we have found that the best model is the linear model 4 (lm4) as it has the lowest RMSE value of 54993.45. This lowest rmse value will vary for another train/ test split, on different run ("Horse Race", as mentioned in question). Here the lm4 model is obtained by interacting the 'bathrooms' variable with all other quantitative variables. The reason for interacting with 'bathrooms' is that bathroom coefficient is not only significant, but also it has the largest coefficient value as shown in the result below in almost all regressions. Here we may mention that in this run, we have found the rmse values of 56420.11, 58850.56, 56977.74, 54993.45, 59741.09, 59496.35, 77399.71 for linear models 1(r1), 2(r2), 3(r3), 4(r4), 5(r5), KNN model and K-CV model respectively. Thus clearly lm4 model is found to be the best model with lowest rmse value.
 
 
 ```{r , eval=FALSE,echo=FALSE,fig.width =5.5, fig.height = 2,fig.align='center'}
@@ -261,7 +265,7 @@ knn_min_rmse=model_knncv[model_knncv$err==min(model_knncv$err),]
 result_cv =c(rmse_lm1_cv ,rmse_lm4_cv,knn_min_rmse[2])
 ```
 
-Also, We tried to do the same regression on the way of K-CV, and then we got the rmse of the linear regression(basic model) is 65608.13, that of linear model 4 is 60768.54, and that of the KNN regression is 62411.67. This results looks like the same as the way of the ten-times average.
+Also, We tried to do the same regression on the way of K-CV, and then we got the rmse of the linear regression(basic model) is 60543.82, that of linear model 4 is 60480.13, and that of the KNN regression is 61817.15. For the K-CV KNN regression we found the optimal K to be 5. This result looks the same as the results derived from taking average of ten rmses.
 
 
 ### Discussion: Comparison between Linear and LNN model
@@ -269,7 +273,7 @@ In this estimation, from the result that rmse of the linear model is smaller tha
 
 ## Conclusion for Tax authority
 
-From the result of the estimation of the linear models and Knnmodel, **Tax authority should use the best linear model** because it has the lowest rmse. Also, taking a look at the summary of the best linear model(Appendix 1), we can get that elements that increases house prices are more "lotSize", more "landValue ", more "livingArea", more "bedrooms", more "bathrooms", and more "rooms" at the statistically significance.
+From the result of the estimation of the linear models and Knn model, Tax authority should use the linear model 'lm4' as best linear model because this model has the lowest rmse (compared to both the "medeium" model & K-nearest neighbour regression model) & the highest accuracy for predicting the price.
 
 ## Appendix
 
@@ -373,7 +377,7 @@ From the coefficient of the logit model, the poor and terrible of the history ma
 
 ### What do you think is going on here?
 
-Intuitively, the poor and terrible of the history made the probability of default increase. So there is something with the bad estimation. We can think this reason is caused by what the default is rare, and so we cannot collect data randomly(the data is not collected through random sampling) that is biased. 
+Intuitively, the poor and terrible credit the history should increase the probability of default. We got completely reverse results. So there is something with the bad estimation. We  think that because the cases of  the default is rare, we cannot collect data randomly(the data is not collected through random sampling), making the case of biased sampling. 
 
 As this evidence, the bar graph has shows that people of the good credit history has the higher default probability. However, this is different from the intuitive result and is not reality.
 
