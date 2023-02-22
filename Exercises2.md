@@ -48,8 +48,8 @@ The estimation of the model is in the following
 
 $$
 \begin{aligned}
-lm1:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize + age + landValue \\\\
-&\quad + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms) \\\\
+lm1:\quad Price &= \beta\_0+\mathbb{\beta}^t(. -pctCollege -swere -waterfront -landaValue\\\\
+&\quad -newConstruction) \\\\
 \\\\
 lm2:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize^2 + age^2 + landValue^2 + livingArea^2 +\\\\ 
 &\quad pctCollege^2 + bedrooms^2 + fireplaces^2 + bathrooms^2 + rooms^2 + \\\\

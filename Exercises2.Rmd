@@ -3,7 +3,7 @@ title: "Exercise 2"
 author: ""
 date: "`r Sys.Date()`"
 output:
-  md_document
+  pdf_document: default
  
 ---
 <!--   pdf_document: default
@@ -84,8 +84,8 @@ The estimation of the model is in the following
 
 $$
 \begin{aligned}
-lm1:\quad Price &= \beta_0+\mathbb{\beta}^t(lotSize + age + landValue \\
-&\quad + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms) \\
+lm1:\quad Price &= \beta_0+\mathbb{\beta}^t(. -pctCollege -swere -waterfront -landaValue\\
+&\quad -newConstruction) \\
 \\
 lm2:\quad Price &= \beta_0+\mathbb{\beta}^t(lotSize^2 + age^2 + landValue^2 + livingArea^2 +\\ 
 &\quad pctCollege^2 + bedrooms^2 + fireplaces^2 + bathrooms^2 + rooms^2 + \\
@@ -148,7 +148,7 @@ for (i in 1:10){
 
   #Here lm1 is the medium model as per the lecture notes (taught in class).
   
-  lm1 = lm(price ~ lotSize + age + landValue + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms, data=saratoga_train)
+  lm1 = lm(price ~. -pctCollege -swere -waterfront -landaValue-newConstruction, data=saratoga_train)
   
   lm2 = lm(price ~ lotSize^2 + age^2 + landValue^2 + livingArea^2 + pctCollege^2 + bedrooms^2 + fireplaces^2 + bathrooms^2 + rooms^2 + lotSize:age + landValue:age + livingArea:age + bedrooms:age, data=saratoga_train)
   
