@@ -48,7 +48,7 @@ The estimation of the model is in the following
 
 $$
 \begin{aligned}
-lm1:\quad Price &= \beta\_0+\mathbb{\beta}^t(. -pctCollege -swere -waterfront -landaValue\\\\
+lm1:\quad Price &= \beta\_0+\mathbb{\beta}^t(. -pctCollege -swer -waterfront -landValue\\\\
 &\quad -newConstruction) \\\\
 \\\\
 lm2:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize^2 + age^2 + landValue^2 + livingArea^2 +\\\\ 
@@ -89,18 +89,17 @@ combination of transformations and by adding the interactions, we have
 tried to handbuild a model for price that outperforms the medium model
 that has alreday been discussed in class. From the results obtained so
 far, we have found that the best model is the linear model 4 (lm4) as it
-has the lowest RMSE value of 58206.47. This lowest rmse value will vary
+has the lowest RMSE value of 58810.74. This lowest rmse value will vary
 for another train/ test split, on different run (“Horse Race”, as
 mentioned in question). Here the lm4 model is obtained by interacting
 the ‘bathrooms’ variable with all other quantitative variables. The
 reason for interacting with ‘bathrooms’ is that bathroom coefficient is
 not only significant, but also it has the largest coefficient value as
 shown in the result below in almost all regressions. Here we may mention
-that in this run, we have found the rmse values of 58752.55, 59075.90,
-58607.72, 58206.47, 60105.40, 58650.36, 60401.00 for linear models
-1(r1), 2(r2), 3(r3), 4(r4), 5(r5), KNN model and K-CV model
-respectively. Thus clearly lm4 model is found to be the best model with
-lowest rmse value.
+that in this run, we have found the rmse values of 65866.46, 59176.73,
+58865.59, 60516.03, 61696.79, 60832.13 for linear models 1(r1), 2(r2),
+3(r3), 4(r4), 5(r5), KNN model and K-CV model respectively. Thus clearly
+lm4 model is found to be the best model with lowest rmse value.
 
 Also, We tried to do the same regression on the way of K-CV, and then we
 got the rmse of the linear regression(basic model) is 60543.82, that of

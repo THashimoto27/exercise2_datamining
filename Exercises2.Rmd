@@ -3,7 +3,7 @@ title: "Exercise 2"
 author: ""
 date: "`r Sys.Date()`"
 output:
-  pdf_document: default
+  md_document
  
 ---
 <!--   pdf_document: default
