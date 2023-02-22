@@ -49,42 +49,24 @@ The estimation of the model is in the following
 $$
 \begin{aligned}
 lm1:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize + age + landValue \\\\
-&\quad + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms)
-\end{aligned}
-$$
-lm2
-$$
-\begin{aligned}
-lm2:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize^2 + age^2 + landValue^2 + livingArea^2 +\\\\
+&\quad + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms) \\\\
+\\\\
+lm2:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize^2 + age^2 + landValue^2 + livingArea^2 +\\\\ 
 &\quad pctCollege^2 + bedrooms^2 + fireplaces^2 + bathrooms^2 + rooms^2 + \\\\
-&\quad lotSize:age + landValue:age + livingArea:age + bedrooms:age)
-\end{aligned}
-$$
-
-$$
-\begin{aligned}
+&\quad lotSize:age + landValue:age + livingArea:age + bedrooms:age) \\\\
+\\\\
 lm3:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize + age + landValue + \\\\
 &\quad livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms \\\\
-&\quad + age:lotSize + landValue:lotSize + livingArea:lotSize + bedrooms:lotSize)
-\end{aligned}
-$$
-$$
-\begin{aligned}
+&\quad + age:lotSize + landValue:lotSize + livingArea:lotSize + bedrooms:lotSize)\\\\
+\\\\
 lm4:\quad Price &= \beta\_0+\mathbb{\beta}^t(lotSize + age + landValue + livingArea \\\\
 &\quad + pctCollege + bedrooms + fireplaces + bathrooms + rooms \\\\
-&\quad + age:bathrooms + landValue:bathrooms + livingArea:bathrooms + bedrooms:bathrooms)
-\end{aligned}
-$$
-$$
-\begin{aligned}
-lm5 :\quad Price &= \beta\_0+\mathbb{\beta}rt(. - heating - sewer - waterfront - newConstruction)^2
-\end{aligned}
-$$
-
-$$
-\begin{aligned}
-lm6: Price &= \beta\_0+\mathbb{\beta\_1}()\[numerical\\ variables\]^2+\mathbb{\beta\_2}\[interaction\\ terms\\ by\\ each\\ numerical\\ variables\]\\\\
-&\quad +\mathbb{\beta\_3}\[non-numerical\\ variables(dummy temrs)\]
+&\quad + age:bathrooms + landValue:bathrooms + livingArea:bathrooms + bedrooms:bathrooms) \\\\
+\\\\
+lm5 :\quad Price &= \beta\_0+\mathbb{\beta}rt(. - heating - sewer - waterfront - newConstruction)^2 \\\\
+\\\\
+lm6: \quad Price &= \beta\_0+\mathbb{\beta\_1}()\[numerical\\ variables\]^2+\mathbb{\beta\_2}\[interaction\\ terms\\ by\\ each\\ numerical\\ variables\]\\\\
+&\quad +\mathbb{\beta\_3}\[non-numerical\\ variables(dummy\\ temrs)\]
 \end{aligned}
 $$
 
