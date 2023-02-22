@@ -243,7 +243,7 @@ K_folds = 5
 saratoga_folds = crossv_kfold(data_cv, k=K_folds)
 
 # Linear regression
-model_lm1_cv = map(saratoga_folds$train, ~ lm(price ~ lotSize + age + landValue + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms,data=.))
+model_lm1_cv = map(saratoga_folds$train, ~  lm(price ~. -pctCollege -sewer -waterfront -landValue-newConstruction, data=.))
 model_lm4_cv = map(saratoga_folds$train, ~ lm(price ~ lotSize + age + landValue + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms + age:bathrooms + landValue:bathrooms + livingArea:bathrooms + bedrooms:bathrooms, data = .))
 
 rmse_lm1_cv = mean(map2_dbl(model_lm1_cv, saratoga_folds$test, modelr::rmse))
@@ -261,7 +261,7 @@ knn_min_rmse=model_knncv[model_knncv$err==min(model_knncv$err),]
 result_cv =c(rmse_lm1_cv ,rmse_lm4_cv,knn_min_rmse[2])
 ```
 
-Also, We tried to do the same regression on the way of K-CV, and then we got the rmse of the linear regression(basic model) is 60543.82, that of linear model 4 is 60480.13, and that of the KNN regression is 61817.15. This results looks like the same as the way of the ten-times average.
+Also, We tried to do the same regression on the way of K-CV, and then we got the rmse of the linear regression(basic model) is 65608.13, that of linear model 4 is 60768.54, and that of the KNN regression is 62411.67. This results looks like the same as the way of the ten-times average.
 
 
 ### Discussion: Comparison between Linear and LNN model

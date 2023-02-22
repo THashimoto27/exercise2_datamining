@@ -102,8 +102,8 @@ that in this run, we have found the rmse values of 65866.46, 59176.73,
 lm4 model is found to be the best model with lowest rmse value.
 
 Also, We tried to do the same regression on the way of K-CV, and then we
-got the rmse of the linear regression(basic model) is 60543.82, that of
-linear model 4 is 60480.13, and that of the KNN regression is 61817.15.
+got the rmse of the linear regression(basic model) is 65608.13, that of
+linear model 4 is 60768.54, and that of the KNN regression is 62411.67.
 This results looks like the same as the way of the ten-times average.
 
 ### Discussion: Comparison between Linear and LNN model
