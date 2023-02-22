@@ -84,7 +84,7 @@ The estimation of the model is in the following
 
 $$
 \begin{aligned}
-lm1:\quad Price &= \beta_0+\mathbb{\beta}^t(. -pctCollege -swere -waterfront -landaValue\\
+lm1:\quad Price &= \beta_0+\mathbb{\beta}^t(. -pctCollege -swer -waterfront -landValue\\
 &\quad -newConstruction) \\
 \\
 lm2:\quad Price &= \beta_0+\mathbb{\beta}^t(lotSize^2 + age^2 + landValue^2 + livingArea^2 +\\ 
@@ -129,37 +129,6 @@ r4 = NULL
 r5=NULL
 r6=NULL
 
-
-# basemodel = lm(log(price)~ .,saratoga_train)
-# step_model <- step(basemodel, scope=~(.)^2)
-# rmse(step_model,saratoga_test)
-# coef(step_model)
-  
-# Estimation
-for (i in 1:10){
-  ## Split into training and testing sets
-  saratoga_split = initial_split(SaratogaHouses, prop = 0.8)
-  saratoga_train = training(saratoga_split)
-  saratoga_test = testing(saratoga_split)
-  
-  data_train <- as.data.frame(c(saratoga_train[1],all_polym2(saratoga_train[2:10]),saratoga_train[11:16]))
-  data_test <- as.data.frame(c(saratoga_test[1],all_polym2(saratoga_test[2:10]),saratoga_test[11:16]))
-
-
-  #Here lm1 is the medium model as per the lecture notes (taught in class).
-  
-  lm1 = lm(price ~. -pctCollege -swere -waterfront -landaValue-newConstruction, data=saratoga_train)
-  
-  lm2 = lm(price ~ lotSize^2 + age^2 + landValue^2 + livingArea^2 + pctCollege^2 + bedrooms^2 + fireplaces^2 + bathrooms^2 + rooms^2 + lotSize:age + landValue:age + livingArea:age + bedrooms:age, data=saratoga_train)
-  
-  lm3 = lm(price ~ lotSize + age + landValue + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms + age:lotSize + landValue:lotSize + livingArea:lotSize + bedrooms:lotSize, data=saratoga_train)
-  
-  lm4 = lm(price ~ lotSize + age + landValue + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms + age:bathrooms + landValue:bathrooms + livingArea:bathrooms + bedrooms:bathrooms, data=saratoga_train)
-  
-  lm5 = lm(price ~ (. - heating - sewer - waterfront - newConstruction)^2, data=saratoga_train)
-
-## Regression the linear model with all variables
-## (because the more variables you will add to the model, the lower rmse you can get)
 # Function: Create polym2
 ## Input: Dataset
 ## Output: New Dataset
@@ -182,7 +151,33 @@ for (i in 1:10){
         }
       return(result)
     }
+
   
+# Estimation
+for (i in 1:10){
+  ## Split into training and testing sets
+  saratoga_split = initial_split(SaratogaHouses, prop = 0.8)
+  saratoga_train = training(saratoga_split)
+  saratoga_test = testing(saratoga_split)
+  
+  data_train <- as.data.frame(c(saratoga_train[1],all_polym2(saratoga_train[2:10]),saratoga_train[11:16]))
+  data_test <- as.data.frame(c(saratoga_test[1],all_polym2(saratoga_test[2:10]),saratoga_test[11:16]))
+
+
+  #Here lm1 is the medium model as per the lecture notes (taught in class).
+  
+  lm1 = lm(price ~. -pctCollege -sewer -waterfront -landValue-newConstruction, data=saratoga_train)
+  
+  lm2 = lm(price ~ lotSize^2 + age^2 + landValue^2 + livingArea^2 + pctCollege^2 + bedrooms^2 + fireplaces^2 + bathrooms^2 + rooms^2 + lotSize:age + landValue:age + livingArea:age + bedrooms:age, data=saratoga_train)
+  
+  lm3 = lm(price ~ lotSize + age + landValue + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms + age:lotSize + landValue:lotSize + livingArea:lotSize + bedrooms:lotSize, data=saratoga_train)
+  
+  lm4 = lm(price ~ lotSize + age + landValue + livingArea + pctCollege + bedrooms + fireplaces + bathrooms + rooms + age:bathrooms + landValue:bathrooms + livingArea:bathrooms + bedrooms:bathrooms, data=saratoga_train)
+  
+  lm5 = lm(price ~ (. - heating - sewer - waterfront - newConstruction)^2, data=saratoga_train)
+
+  ## Regression the linear model with all variables
+## (because the more variables you will add to the model, the lower rmse you can get) 
   
   lm6 = lm(price~ ., data=data_train)
   
@@ -233,7 +228,7 @@ result = c(result_lm1,result_lm2,result_lm3,result_lm4,result_lm5,result_lm6,res
 #summary(model1)
 ```
 
-Here linear model 1 (lm1) is the medium model as mentioned in the lecture slide, wherein professor has mentioned that the medium model is price versus all variables above (main effects only). Now using the combination of transformations and by adding the interactions, we have tried to handbuild a model for price that outperforms the medium model that has alreday been discussed in class. From the results obtained so far, we have found that the best model is the linear model 4 (lm4) as it has the lowest RMSE value of 58206.47. This lowest rmse value will vary for another train/ test split, on different run ("Horse Race", as mentioned in question). Here the lm4 model is obtained by interacting the 'bathrooms' variable with all other quantitative variables. The reason for interacting with 'bathrooms' is that bathroom coefficient is not only significant, but also it has the largest coefficient value as shown in the result below in almost all regressions. Here we may mention that in this run, we have found the rmse values of 58752.55, 59075.90, 58607.72, 58206.47, 60105.40, 58650.36, 60401.00 for linear models 1(r1), 2(r2), 3(r3), 4(r4), 5(r5),  KNN model and K-CV model respectively. Thus clearly lm4 model is found to be the best model with lowest rmse value.
+Here linear model 1 (lm1) is the medium model as mentioned in the lecture slide, wherein professor has mentioned that the medium model is price versus all variables above (main effects only). Now using the combination of transformations and by adding the interactions, we have tried to handbuild a model for price that outperforms the medium model that has alreday been discussed in class. From the results obtained so far, we have found that the best model is the linear model 4 (lm4) as it has the lowest RMSE value of 58810.74. This lowest rmse value will vary for another train/ test split, on different run ("Horse Race", as mentioned in question). Here the lm4 model is obtained by interacting the 'bathrooms' variable with all other quantitative variables. The reason for interacting with 'bathrooms' is that bathroom coefficient is not only significant, but also it has the largest coefficient value as shown in the result below in almost all regressions. Here we may mention that in this run, we have found the rmse values of 65866.46, 59176.73, 58865.59, 60516.03, 61696.79, 60832.13 for linear models 1(r1), 2(r2), 3(r3), 4(r4), 5(r5),  KNN model and K-CV model respectively. Thus clearly lm4 model is found to be the best model with lowest rmse value.
 
 
 ```{r , eval=FALSE,echo=FALSE,fig.width =5.5, fig.height = 2,fig.align='center'}
